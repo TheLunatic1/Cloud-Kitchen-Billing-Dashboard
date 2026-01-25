@@ -72,9 +72,9 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
     if (!formData.date) newErrors.date = 'Required';
 
     formData.lineItems.forEach((item, idx) => {
-      if (isCorporate && !item.date) newErrors[`line_${idx}_date`] = 'Required';
-      if (!isCorporate && !item.packageName?.trim()) newErrors[`line_${idx}_packageName`] = 'Required';
-      if (!item.packageType) newErrors[`line_${idx}_packageType`] = 'Required';
+      if (isCorporate && !item.date) newErrors[`line_${idx}_date`] = 'Service Date required';
+      if (!isCorporate && !item.packageName?.trim()) newErrors[`line_${idx}_packageName`] = 'Package Name required';
+      if (!item.packageType) newErrors[`line_${idx}_packageType`] = 'Package Type required';
       if (!item.persons || parseFloat(item.persons) <= 0)
         newErrors[`line_${idx}_persons`] = 'Positive number required';
       if (!item.unitPrice || parseFloat(item.unitPrice) < 0)
@@ -107,7 +107,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
     <div className="modal modal-open">
       <div className="modal-box w-11/12 max-w-5xl">
         <h3 className="font-bold text-xl mb-6">
-          {initialData.id ? 'Edit' : 'Create'} {isCorporate ? 'Corporate' : 'Event'} Bill
+          {initialData.id ? 'Edit' : 'Create'} {isCorporate ? 'Corporate' : 'Event / Random'} Bill
         </h3>
 
         <form onSubmit={handleSubmit}>
@@ -125,7 +125,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                 value={formData.name}
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
-                placeholder={isCorporate ? 'e.g. X Ltd' : 'e.g. Birthday Party'}
+                placeholder={isCorporate ? 'e.g. X Ltd' : 'e.g. Birthday Party or X Event'}
               />
               {errors.name && <span className="text-error text-xs mt-1 block">{errors.name}</span>}
             </div>
@@ -140,6 +140,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                 value={formData.contactPerson}
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.contactPerson ? 'input-error' : ''}`}
+                placeholder="e.g. Mr. XYZ"
               />
               {errors.contactPerson && <span className="text-error text-xs mt-1 block">{errors.contactPerson}</span>}
             </div>
@@ -154,7 +155,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                 value={formData.contactNo}
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.contactNo ? 'input-error' : ''}`}
-                placeholder="017xxxxxxxx"
+                placeholder="01xxxxxxxxx"
               />
               {errors.contactNo && <span className="text-error text-xs mt-1 block">{errors.contactNo}</span>}
             </div>
@@ -176,11 +177,11 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
             </div>
           </div>
 
-          {/* Line Items */}
+          {/* Line Items Table */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-3">
               <h4 className="font-semibold text-lg">
-                {isCorporate ? 'Service Dates & Consumption' : 'Package Items'}
+                {isCorporate ? 'Service Dates & Consumption' : 'Packages / Food Items'}
               </h4>
               <button
                 type="button"
@@ -198,7 +199,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                     <th className="w-8">#</th>
                     <th>{isCorporate ? 'Service Date' : 'Package Name'}</th>
                     <th>Package Type</th>
-                    {!isCorporate && <th>Description</th>}
+                    {!isCorporate && <th>Description / Food Items</th>}
                     <th className="w-24">Persons</th>
                     <th className="w-32">Unit Price (BDT)</th>
                     <th className="w-32 text-right">Line Total</th>
@@ -213,7 +214,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                         {isCorporate ? (
                           <input
                             type="date"
-                            value={item.date}
+                            value={item.date || ''}
                             onChange={(e) => handleLineItemChange(index, 'date', e.target.value)}
                             className={`input input-sm input-bordered w-full ${errors[`line_${index}_date`] ? 'input-error' : ''}`}
                           />
@@ -222,18 +223,18 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                             type="text"
                             value={item.packageName || ''}
                             onChange={(e) => handleLineItemChange(index, 'packageName', e.target.value)}
-                            placeholder="Package-1"
+                            placeholder="e.g. Package-1 or Deluxe"
                             className={`input input-sm input-bordered w-full ${errors[`line_${index}_packageName`] ? 'input-error' : ''}`}
                           />
                         )}
                       </td>
                       <td>
                         <select
-                          value={item.packageType}
+                          value={item.packageType || ''}
                           onChange={(e) => handleLineItemChange(index, 'packageType', e.target.value)}
                           className={`select select-bordered select-sm w-full ${errors[`line_${index}_packageType`] ? 'select-error' : ''}`}
                         >
-                          <option value="">Select</option>
+                          <option value="">Select Type</option>
                           <option value="Economy">Economy</option>
                           <option value="Standard">Standard</option>
                           <option value="Premium">Premium</option>
@@ -245,7 +246,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                             type="text"
                             value={item.description || ''}
                             onChange={(e) => handleLineItemChange(index, 'description', e.target.value)}
-                            placeholder="Chicken + Rice + Salad"
+                            placeholder="e.g. Chicken + Rice + Salad + Drinks"
                             className="input input-sm input-bordered w-full"
                           />
                         </td>
@@ -253,7 +254,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                       <td>
                         <input
                           type="number"
-                          value={item.persons}
+                          value={item.persons || ''}
                           onChange={(e) => handleLineItemChange(index, 'persons', e.target.value)}
                           min="1"
                           className={`input input-sm input-bordered w-full ${errors[`line_${index}_persons`] ? 'input-error' : ''}`}
@@ -262,7 +263,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
                       <td>
                         <input
                           type="number"
-                          value={item.unitPrice}
+                          value={item.unitPrice || ''}
                           onChange={(e) => handleLineItemChange(index, 'unitPrice', e.target.value)}
                           min="0"
                           step="0.01"

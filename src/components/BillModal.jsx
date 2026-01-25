@@ -105,7 +105,7 @@ const BillModal = ({ isOpen, onClose, onSave, initialData = {}, type = 'corporat
 
   return (
     <div className="modal modal-open">
-      <div className="modal-box w-11/12 max-w-5xl">
+      <div className="modal-box max-w-4xl w-11/12 p-4 sm:p-6 md:p-8 lg:p-10">
         <h3 className="font-bold text-xl mb-6">
           {initialData.id ? 'Edit' : 'Create'} {isCorporate ? 'Corporate' : 'Event / Random'} Bill
         </h3>

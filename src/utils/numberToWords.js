@@ -11,9 +11,8 @@ const tens = [
 const thousands = ['', 'Thousand', 'Million', 'Billion'];
 
 /**
- * Converts a number to English words (for BDT amount)
- * Handles up to billions, adds "Only" at the end
- * Returns e.g. "Thirteen Thousand Five Hundred Only"
+ * Converts a number to English words
+ * Handles up to billions
  */
 export function numberToWordsBDT(num) {
   if (num === 0) return 'Zero Only';

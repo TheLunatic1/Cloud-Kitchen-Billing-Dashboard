@@ -1,2 +1,33 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+
+
+
+.overflow-x-auto {
+  position: relative;
+}
+
+.overflow-x-auto::after {
+  content: '→ Swipe left for more columns →';
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0.8;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .overflow-x-auto:has(table) {
+    overflow-x: auto;
+  }
+  .overflow-x-auto:has(table)::after {
+    display: block;
+  }
+}
